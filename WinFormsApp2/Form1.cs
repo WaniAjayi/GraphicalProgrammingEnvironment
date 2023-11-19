@@ -12,7 +12,7 @@ namespace WinFormsApp2
             InitializeComponent();
 
             commandParser = new CommandParser();
-            _commandExecutor = new CommandExecutor(pictureBox1.Width, pictureBox1.Height, pictureBox1.CreateGraphics(), Color.Black);
+            _commandExecutor = new CommandExecutor(pictureBox1.Width, pictureBox1.Height, pictureBox1.CreateGraphics(), Color.Black, pictureBox1);
         }
 
 
@@ -27,8 +27,6 @@ namespace WinFormsApp2
                 _commandExecutor.ExecuteCommands(commandParser.GetDelayedCommands());
 
             }
-           // e.Handled= true;
-            // pictureBox1.CreateGraphics(_commandExecutor.GetCanvasBitmap());
 
         }
 
@@ -36,21 +34,26 @@ namespace WinFormsApp2
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-
-                string singleLineCommand = textBox1.Text.ToLower();
-                if (commandParser.ParseCommands(singleLineCommand))
+                string singleLineCommand = textBox1.Text.ToLower().Trim();
+                if (string.IsNullOrEmpty(singleLineCommand))
                 {
-                    commands = richTextBox1.Text.ToLower().Split('\n');
-                    commandParser.ParseCommands(commands);
-                    _commandExecutor.ExecuteCommands(commandParser.GetDelayedCommands());
+                    MessageBox.Show("You haven't entered a command!");
                     e.Handled = true;
+                    return;
                 }
 
-                // _commandExecutor.ExecuteCommands();
-
-
-                e.Handled = true; // Prevents the Enter key from being processed further
-
+                if (!commandParser.ParseCommands(singleLineCommand))
+                {
+                    e.Handled = true;
+                    return;
+                }
+                else
+                {
+                    commandParser.ParseCommands(commands);
+                    _commandExecutor.ExecuteCommands(commandParser.GetDelayedCommands());
+                    e.Handled = true; // Prevents the Enter key from being processed further
+                }
+                textBox1.Clear();
             }
         }
 
@@ -87,7 +90,7 @@ namespace WinFormsApp2
             openFileDialog1.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
             //Displays the OpenFileDialog window.
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK) 
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
                 try
@@ -97,16 +100,10 @@ namespace WinFormsApp2
                     richTextBox1.Lines = lines;
                 }
                 catch (Exception ex)
-                { 
+                {
                     MessageBox.Show(ex.Message);
                 }
             }
         }
-
-        // private void textBox1_KeyPress(object sender, EventArgs e)
-        //{
-
-
-        //}
     }
 }
