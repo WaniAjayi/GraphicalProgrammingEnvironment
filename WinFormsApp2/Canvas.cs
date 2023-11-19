@@ -16,7 +16,6 @@ namespace WinFormsApp2
         {
             private Bitmap bitmap;
             private Graphics graphics;
-            private PictureBox pictureBox1;
 
             public Canvas(int width, int height)
             {
@@ -32,15 +31,6 @@ namespace WinFormsApp2
                 }
             }
 
-
-
-
-            public void ClearCanvas()
-            {
-                using (Graphics g = pictureBox1.CreateGraphics())
-                    graphics.Clear(Color.White);
-                pictureBox1.Refresh();
-            }
 
             public Graphics GetCanvasBitmap()
             {
