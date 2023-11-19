@@ -29,15 +29,8 @@ namespace WinFormsApp2
         /// </summary>
         /// <param name="commands">An array of commands to be parsed.</param>
         /// <returns>True if all commands are valid; otherwise, false.</returns>
-        public bool ParseCommands(string[] commands)
+        public bool ParseCommands(string[] commands)        //Performs command parsing and validation
         {
-            if (commands == null || commands.Length == 0)
-            {
-                // Show the empty command message.
-                MessageBox.Show("You haven't entered any commands!");
-                return false;
-            }
-
             foreach (var command in commands)
             {
                 bool matched = false;
@@ -78,15 +71,8 @@ namespace WinFormsApp2
         /// <returns>True if the command is valid; otherwise, false.</returns>
         public bool ParseCommands(string singleLineCommand)
         {
-            if (singleLineCommand == null)
-            {
-                // Shows the message if no command is provided.
-                MessageBox.Show("You haven't entered a command!");
-                return false;
-            }
+            bool matched = false;
 
-
-           
             foreach (var regexPattern in regexPatterns)
             {
 
@@ -94,15 +80,21 @@ namespace WinFormsApp2
                 {
                    
                     delayedCommands.Add(singleLineCommand);
-                   
-                    
+                    matched = true;
+                    break;  // Once a match is found, there is no need to continue checking other patterns
                 }
                 
+            }
+
+            if (!matched)
+           {
+                MessageBox.Show("You have entered an invalid command: " + singleLineCommand);
+                return false;
             }
                 
             
             return true;
-            //return matched;
+
         }
     }
 }

@@ -22,6 +22,7 @@ namespace WinFormsApp2
         private readonly PenReset penReset;
         private bool fillEnabled; //Default fill state
         private Color FillColor; // Default fill colour
+        private readonly PictureBox pictureBox1;
 
         /// <summary>
         /// Constructor initializes the necessary components for drawing on a canvas.
@@ -30,8 +31,9 @@ namespace WinFormsApp2
         /// <param name="canvasHeight">Height of the canvas.</param>
         /// <param name="graphics">Graphics object for drawing on a surface.</param>
         /// <param name="color">Color used for drawing.</param>
-        public CommandExecutor(int canvasWidth, int canvasHeight, Graphics graphics, Color color)
+        public CommandExecutor(int canvasWidth, int canvasHeight, Graphics graphics, Color color, PictureBox pictureBox)
         {
+            this.pictureBox1 = pictureBox;
             this.graphics = graphics;
             this.color = color;
 
@@ -43,7 +45,7 @@ namespace WinFormsApp2
             rect = new Rect(canvas, cursorManager);
             triangle = new Triangle(canvas, cursorManager);
             circle = new Circle(canvas, cursorManager);
-            clearCanvas = new(canvas);
+            clearCanvas = new ClearCanvas(pictureBox1);
             penReset = new(cursorManager);
             
         }
@@ -121,7 +123,7 @@ namespace WinFormsApp2
             else if (Regex.IsMatch(command, @"clear"))
             {
                 // Execute the clear command
-                clearCanvas.Execute(graphics, color, 2, 0);
+                clearCanvas.Execute(Color.SlateGray);
             }
             else if (Regex.IsMatch(command, @"reset"))
             {
